@@ -60,12 +60,13 @@ gdt_descriptor:
     dw gdt_end - gdt_start-1
     dd gdt_start
 
+[BITS 32]
 protected_mode_32:
     mov eax, 1
     mov ecx, 100
-    mov edi, 0x100000
+    mov edi, 0x0100000
     call ata_lba_read
-    jmp CODE_SEG:0x100000
+    jmp CODE_SEG:0x0100000
 
 ata_lba_read:
     mov ebx, eax, ; Backup the LBA
