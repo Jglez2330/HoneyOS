@@ -1,5 +1,6 @@
 DATA_SEG equ 0x10
 global _start
+extern kernel_main
 [BITS 32]
 _start:
     mov ax, DATA_SEG
@@ -15,5 +16,7 @@ _start:
     in al, 0x92
     or al, 2
     out 0x92, al
-
+    call kernel_main
     jmp $
+
+times 512- ($-$$) db 0
