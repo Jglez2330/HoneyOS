@@ -7,7 +7,7 @@ CC := i686-elf-gcc
 LD := i686-elf-ld
 ASM?=nasm
 
-FILES = ./build/kernel.S.o ./build/kernel.o
+FILES = ./build/kernel.S.o ./build/kernel.o ./build/string.o ./build/idt/idt.S.o ./build/idt/idt.o ./build/io/io.S.o ./build/memory.o 
 INCLUDES = -I./include
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -28,7 +28,16 @@ all: ./bin/boot.bin ./bin/kernel.bin
 
 ./build/kernel.S.o: ./src/kernel.S
 	$(ASM) -f elf -g ./src/kernel.S -o ./build/kernel.S.o
-
+./build/string.o: ./src/string.c
+	$(CC) $(INCLUDES) $(FLAGS) -std=gnu99 -c ./src/string.c -o ./build/string.o
+./build/idt/idt.S.o: ./src/asm/idt.S
+	$(ASM) -f elf -g ./src/asm/idt.S -o ./build/idt/idt.S.o
+./build/idt/idt.o: ./src/idt.c
+	$(CC) $(INCLUDES) $(FLAGS) -std=gnu99 -c ./src/idt.c -o ./build/idt/idt.o
+./build/io/io.S.o: ./src/asm/io.S
+	$(ASM) -f elf -g ./src/asm/io.S -o ./build/io/io.S.o
+./build/memory.o: ./src/memory.c	
+	$(CC) $(INCLUDES) $(FLAGS) -std=gnu99 -c ./src/memory.c -o ./build/memory.o
 debug:
 	qemu-system-x86_64 -hda ./bin/os.bin
 
