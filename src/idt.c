@@ -20,10 +20,12 @@ void idt_zero(){
 }
 
 void idt_init(){
-    memset(&interrupts, 0, sizeof(interrupts));
 
-    descriptor.size = sizeof(interrupts) - 1;
-    descriptor.offset  = (uint32_t)interrupts;
+    memset(&interrupts, 0, sizeof(dtr_descriptor)*256);
+    memset(&descriptor, 0, sizeof(idtr_descriptor));
+
+    descriptor.size = sizeof(dtr_descriptor)*256 - 1;
+    descriptor.offset  = (uint32_t)&interrupts;
 
     for (int i =0; i < 256; i++){
         idt_set(i, no_interrupt);
