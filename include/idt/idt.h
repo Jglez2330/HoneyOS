@@ -18,4 +18,6 @@ typedef struct{
 
 void idt_set(uint8_t index, void* handler_address);
 void idt_init();
+void enable_interrupt();
+void disable_interrupt();
 #endif //_IDT_H

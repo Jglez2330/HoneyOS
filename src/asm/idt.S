@@ -1,6 +1,9 @@
 section .asm
 
 global load_idt
+global disable_interrupt
+global no_interrupt
+global enable_interrupt
 extern no_interrupt_handler
 
 
@@ -22,3 +25,10 @@ no_interrupt:
     popad
     sti
     iret
+
+enable_interrupt:
+    sti
+    ret
+disable_interrupt:
+    cli 
+    ret

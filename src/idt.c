@@ -8,6 +8,8 @@ idtr_descriptor descriptor;
 
 extern void no_interrupt();
 extern void load_idt(idtr_descriptor* descriptor);
+extern void enable_interrupt();
+extern void disable_interrupt();
 
 void no_interrupt_handler()
 {
@@ -18,12 +20,14 @@ void idt_zero(){
 }
 
 void idt_init(){
-    memset(&interrupts, 0, sizeof(dtr_descriptor)*256);
-    memset(&descriptor, 0, sizeof(idtr_descriptor));
+    memset(&interrupts, 0, sizeof(interrupts));
 
-    descriptor.size = sizeof(dtr_descriptor)*256 - 1;
-    descriptor.offset  = (uint32_t)&interrupts;
+    descriptor.size = sizeof(interrupts) - 1;
+    descriptor.offset  = (uint32_t)interrupts;
 
+    for (int i =0; i < 256; i++){
+        idt_set(i, no_interrupt);
+    }
     idt_set(0x0, idt_zero);
     load_idt(&descriptor);
 }
